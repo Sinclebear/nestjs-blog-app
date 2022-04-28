@@ -26,4 +26,7 @@ export class BoardsService {
     console.log(board);
     return board;
   }
+  getBoardById(id: string): Board {
+    return this.boards.find((board) => board.id === id);
+  }
 }

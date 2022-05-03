@@ -18,33 +18,14 @@ export class BoardsService {
   // getAllBoards(): Board[] {
   //   return this.boards;
   // }
-
-  async createBoard(createBoardDto: CreateBoardDto): Promise<Board>{
-    const {title, description} = createBoardDto;
-
-    const board = this.boardRepository.create({
-      title,
-      description,
-      status: BoardStatus.PUBLIC
-    })
-
-    await this.boardRepository.save(board);
-    return board;
+  async getAllBoards(): Promise<Board[]> {
+    return this.boardRepository.find();
   }
 
-  // // createBoard(title: string, description: string) {
-  // createBoard(createBoardDto: CreateBoardDto) {
-  //   const { title, description } = createBoardDto;
-  //   const board: Board = {
-  //     id: uuid(),
-  //     title: title,
-  //     description: description,
-  //     status: BoardStatus.PUBLIC,
-  //   };
-  //   this.boards.push(board);
-  //   //console.log(board);
-  //   return board;
-  // }
+  createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
+    return this.boardRepository.createdBoard(createBoardDto);
+  }
+
   async getBoardById(id: number): Promise<Board> {
     const found = await this.boardRepository.findOne(id);
 
@@ -54,22 +35,22 @@ export class BoardsService {
 
     return found;
   }
-  // getBoardById(id: string): Board {
-  //   const found = this.boards.find((board) => board.id === id);
-  //   if (!found) {
-  //     throw new NotFoundException(`${id} id의 게시글이 없습니다.`);
-  //   }
-  //   return found;
-  // }
 
-  // deleteBoard(id: string): void {
-  //   const found = this.getBoardById(id);
-  //   this.boards = this.boards.filter((board) => board.id !== found.id);
-  // }
+  async deleteBoard(id: number): Promise<void> {
+    const result = await this.boardRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Can't find Board with id ${id}`);
+    }
 
-  // updateBoardStatus(id: string, status: BoardStatus): Board {
-  //   const board = this.getBoardById(id);
-  //   board.status = status;
-  //   return board;
-  // }
+    console.log('result : ', result); // 삭제 가능한 건이 있을 시 : DeleteResult { raw: [], affected: 1 }
+  }
+
+  async updateBoardStatus(id: number, status: BoardStatus): Promise<Board> {
+    const board = await this.getBoardById(id);
+
+    board.status = status;
+    await this.boardRepository.save(board);
+
+    return board;
+  }
 }

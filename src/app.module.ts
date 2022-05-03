@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { BoardsModule } from './boards/boards.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import * as Joi from 'joi';
+import Joi from 'joi';
 
 @Module({
   imports: [

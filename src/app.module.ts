@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { BoardsModule } from './boards/boards.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 import Joi from 'joi';
 
 @Module({
@@ -32,6 +33,7 @@ import Joi from 'joi';
       synchronize: true,
     }),
     BoardsModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
